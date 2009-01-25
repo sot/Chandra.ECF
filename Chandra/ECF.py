@@ -1,7 +1,6 @@
 """
 Chandra.ECF is provides a simple method to access the Chandra HRMA Enclosed
-Counts Fraction (ECF) data.  Currently the tool uses nearest neighbor interpolation 
-## of the provided position to the ECF grid.
+Counts Fraction (ECF) data. 
 
 http://cxc.harvard.edu/cal/Hrma/psf/
 """
@@ -16,14 +15,14 @@ def interp_ECF(ecf=0.9, theta=0, phi=0, energy=1.5, shape='circular', value='rad
     """Compute a 4-d bilinear interpolation of the enclosed counts fraction
     radius provided by the CXC calibration group.
 
-    @param ecf: Enclosed counts fraction (0 to 1)
-    @param theta: Off-axis angle (arcmin)
-    @param phi: Off-axis azimuth (deg)
-    @param energy: Energy (keV)
-    @param shape: 'circular' or 'elliptical'
-    @param value: Column in the ECF file to interpolate (default=radius)
+    :param ecf: Enclosed counts fraction (0 to 1)
+    :param theta: Off-axis angle (arcmin)
+    :param phi: Off-axis azimuth (deg)
+    :param energy: Energy (keV)
+    :param shape: 'circular' or 'elliptical'
+    :param value: Column in the ECF file to interpolate (default=radius)
 
-    @return: Interpolated ECF radius
+    :rtype: Interpolated ECF radius
     """
     if shape not in ECFS:
         ECFS[shape] = _read_ecf_file(shape)
@@ -55,8 +54,8 @@ def interp_ECF(ecf=0.9, theta=0, phi=0, energy=1.5, shape='circular', value='rad
 def _read_ecf_file(shape):
     """Read the ECF data file (contained within package) and do some fixup.
 
-    @param shape: 'circular' or 'elliptical'
-    @return: dict of ECF file columns
+    :param shape: 'circular' or 'elliptical'
+    :rtype: dict of ECF file columns
     """
     filename = os.path.join(os.path.dirname(__file__), shape + '_ECF.fits')
     hdus = pyfits.open(filename)
@@ -78,13 +77,13 @@ def _read_ecf_file(shape):
     return ECF
 
 def _interp1d(axis, x):
-    """Bilinear interpolation of supplied C{axis}.  Returns (j, t) where
-    C{j} is a two-element list giving the indexes of the axis elements
-    surrounding C{x}.  C{t} is the bilinear interpolation of C{x} between
+    """Bilinear interpolation of supplied ``axis``.  Returns (j, t) where
+    ``j`` is a two-element list giving the indexes of the axis elements
+    surrounding ``x``.  ``t`` is the bilinear interpolation of ``x`` between
     the surrounding axis elements (see code).
 
-    @param axis: numpy array defining to grid points for this axis
-    @return: (j, t)
+    :param axis: numpy array defining to grid points for this axis
+    :rtype: (j, t)
     """
     try:
         j0 = np.where(axis <= x)[0][-1]
