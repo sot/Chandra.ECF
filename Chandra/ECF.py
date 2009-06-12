@@ -22,7 +22,7 @@ def interp_ECF(ecf=0.9, theta=0, phi=0, energy=1.5, shape='circular', value='rad
     :param shape: 'circular' or 'elliptical'
     :param value: Column in the ECF file to interpolate (default=radius)
 
-    :rtype: Interpolated ECF radius
+    :rtype: Interpolated ECF radius (arcsec)
     """
     if shape not in ECFS:
         ECFS[shape] = _read_ecf_file(shape)
@@ -50,6 +50,35 @@ def interp_ECF(ecf=0.9, theta=0, phi=0, energy=1.5, shape='circular', value='rad
                     yi += y[j[dj], k[dk], l[dl], m[dm]] * t[dj] * u[dk] * v[dl] * w[dm]
 
     return yi
+
+def ECF_radius(radius=1.0, theta=0, phi=0, energy=1.5):
+    """Determine the enclosed counts fraction for a given enclosed radius.
+
+    :param radius: enclosed radius (arcsec)
+    :param theta: Off-axis angle (arcmin)
+    :param phi: Off-axis azimuth (deg)
+    :param energy: Energy (keV)
+
+    :rtype: Interpolated ECF (0 to 1)
+    """
+    # Brute force: calculate radii at ecf=0.01, 0.02, ... 0.99 and interpolate
+    # Execution time ~ 20 msec => good enough.
+    radii = [interp_ECF(i/100., theta, phi, energy) for i in range(1, 100)]
+    if radius <= radii[0]:
+        ecf = 0.01
+    elif radius >= radii[-1]:
+        ecf = 0.99
+    else:
+        irad = np.searchsorted(radii, [radius])[0]
+        x = radius
+        x0 = radii[irad-1]
+        x1 = radii[irad]
+        y0 = irad / 100.
+        y1 = (irad+1) / 100.
+        ecf = y0 + (y1-y0) / (x1-x0) * (x-x0)
+
+    return ecf
+
 
 def _read_ecf_file(shape):
     """Read the ECF data file (contained within package) and do some fixup.
