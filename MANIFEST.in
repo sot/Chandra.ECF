@@ -1,3 +1,3 @@
-recursive-include *.png
-recursive-include *.fits
+include ecf_radius.png
+include Chandra/*.fits
 
