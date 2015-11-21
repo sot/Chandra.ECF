@@ -8,6 +8,8 @@ import os
 import pyfits
 import numpy as np
 
+__version__ = '0.2.1'
+
 AXES = 'ECF THETA PHI ENERGY'.split()
 ECFS = dict()
 
