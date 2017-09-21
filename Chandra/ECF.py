@@ -1,3 +1,4 @@
+# Licensed under a 3-clause BSD style license - see LICENSE.rst
 """
 Chandra.ECF is provides a simple method to access the Chandra HRMA Enclosed
 Counts Fraction (ECF) data. 
